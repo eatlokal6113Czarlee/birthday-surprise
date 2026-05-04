@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>💛 Happy Birthday, Langga! 💛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* preserve magic feel */
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 10% 30%, #2b1e2f, #1a1220);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Poppins', 'Dancing Script', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        /* main surprise envelope style card */
+        .surprise-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            perspective: 1400px;
+        }
+
+        .birthday-card {
+            background: #fffef7;
+            border-radius: 64px;
+            box-shadow: 0 30px 45px rgba(0, 0, 0, 0.4), 0 0 0 10px #ffdd99, 0 0 0 15px #f7b05e;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transform-style: preserve-3d;
+        }
+
+        .card-header {
+            background: linear-gradient(125deg, #ffb347, #ffdd99, #ffcc88);
+            padding: 35px 24px 25px;
+            text-align: center;
+            border-bottom: 4px solid #ff914d;
+        }
+
+        .card-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            font-family: 'Dancing Script', cursive;
+            color: #3b1e0a;
+            text-shadow: 3px 3px 0 #ffe0a3;
+            letter-spacing: 1px;
+        }
+
+        .card-header p {
+            font-size: 1.25rem;
+            background: rgba(255,250,210,0.9);
+            display: inline-block;
+            padding: 6px 24px;
+            border-radius: 60px;
+            margin-top: 14px;
+            font-weight: 500;
+            color: #ac4e2c;
+        }
+
+        .card-content {
+            padding: 30px 30px 40px;
+        }
+
+        .heart-message {
+            background: #fff3e6;
+            border-radius: 48px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            text-align: center;
+            font-size: 1.65rem;
+            font-weight: bold;
+            color: #c9512c;
+            box-shadow: inset 0 0 0 2px #ffe0b5, 0 8px 20px rgba(0,0,0,0.05);
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* secret zone */
+        .secret-zone {
+            text-align: center;
+            margin: 16px 0 10px;
+        }
+
+        .surprise-btn {
+            background: #ff7b4a;
+            border: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 18px 36px;
+            border-radius: 80px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 12px 0 #9b3a1a;
+            transition: 0.08s linear;
+            font-family: inherit;
+            letter-spacing: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .surprise-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 6px 0 #9b3a1a;
+        }
+
+        /* hidden surprise panel - your beautiful letter appears */
+        .hidden-surprise {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.9s ease-out, opacity 0.7s ease, margin 0.5s;
+            margin-top: 0;
+            background: #fffaf2;
+            border-radius: 56px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden-surprise.show {
+            max-height: 1300px;
+            opacity: 1;
+            margin-top: 38px;
+            padding: 30px 28px 40px;
+        }
+
+        .love-letter {
+            text-align: left;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #fff5ea;
+            padding: 28px 28px;
+            border-radius: 48px;
+            line-height: 1.65;
+            font-size: 1.13rem;
+            color: #2d2418;
+            border: 1px solid #ffddb0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .love-letter p {
+            margin-bottom: 1.2rem;
+        }
+
+        .love-letter strong {
+            color: #dd6b3e;
+            font-weight: 700;
+        }
+
+        .signature {
+            margin-top: 25px;
+            font-size: 1.2rem;
+            font-style: italic;
+            text-align: right;
+            font-weight: 500;
+            border-top: 2px dashed #ffc285;
+            padding-top: 20px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .floating-deco {
+            font-size: 2rem;
+            text-align: center;
+            margin-top: 20px;
+            letter-spacing: 12px;
+        }
+
+        /* canvas effects */
+        #confetti-canvas, #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        #confetti-canvas {
+            z-index: 999;
+        }
+        #fireworks-canvas {
+            z-index: 1000;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: #ffddb0;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 580px) {
+            .card-header h1 { font-size: 2.2rem; }
+            .heart-message { font-size: 1.3rem; }
+            .surprise-btn { font-size: 1.2rem; padding: 12px 24px; }
+            .love-letter { font-size: 0.98rem; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="surprise-container">
+    <div class="birthday-card">
+        <div class="card-header">
+            <h1>🎂 Happy Birthday, Langga! 🎂</h1>
+            <p>💛 A celebration of YOU 💛</p>
+        </div>
+        <div class="card-content">
+            <div class="heart-message" id="teaserMsg">
+                💖 My dearest Yhen 💖 <br> A surprise waits inside...
+            </div>
+            <div class="secret-zone">
+                <button class="surprise-btn" id="revealSurpriseBtn">
+                    🎁 OPEN YOUR LETTER 🎁
+                </button>
+            </div>
+            <div class="hidden-surprise" id="letterReveal">
+                <div class="love-letter">
+                    <p><strong>Happy Birthday, Langga!</strong></p>
+
+                    <p>Today, I celebrate not just the day you were born, but the incredible woman you are. You are an amazing baker whose passion brings sweetness not only to your creations but to our home and everyone around you. Every cake you make carries your love, patience, and care and that's exactly how you live your life.</p>
+
+                    <p>As a mother to <strong>Eliana and Charles</strong>, you are nothing short of extraordinary. The way you nurture, guide, and love them so deeply is something I admire every single day. They are growing up with the best example of kindness, strength, and warmth because of you. <strong>Thank you</strong> for being the best mother sa ila.</p>
+
+                    <p>And as my wife, you are my greatest blessing. You bring light to my darkest days, calm to my worries, and joy to even the simplest moments. Life with you is not just beautiful it is meaningful. <strong>Salamat sa imo presence</strong> you and the kiddos are my strength.</p>
+
+                    <p>Thank you for everything you do, for all the love you give, and for simply being you.</p>
+
+                    <p>I love you more than words can ever fully express.</p>
+
+                    <div class="signature">
+                        💛 Happy Birthday, Yhen. 💛<br>
+                        Forever yours.
+                    </div>
+                </div>
+                <div class="floating-deco">
+                    💛🎂💖🥰🎈
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>✨ Click the golden button — a burst of love & light for you ✨</footer>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+<canvas id="fireworks-canvas"></canvas>
+
+<script>
+    (function() {
+        // ---------- ELEMENTS ----------
+        const revealBtn = document.getElementById('revealSurpriseBtn');
+        const letterDiv = document.getElementById('letterReveal');
+        const teaser = document.getElementById('teaserMsg');
+        
+        let surpriseActivated = false;
+
+        // ---------- CONFETTI ENGINE ----------
+        let confettiActive = false;
+        let confettiAnimId = null;
+        let confettiParticles = [];
+        let confCanvas = document.getElementById('confetti-canvas');
+        let confCtx = confCanvas.getContext('2d');
+        let w = window.innerWidth, h = window.innerHeight;
+
+        function resizeConfetti() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+            confCanvas.width = w;
+            confCanvas.height = h;
+        }
+        window.addEventListener('resize', () => {
+            resizeConfetti();
+            if (fwCtx) resizeFireworks();
+        });
+
+        class ConfettiPiece {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h - h;
+                this.size = Math.random() * 9 + 4;
+                this.speedY = Math.random() * 4.5 + 2.8;
+                this.speedX = (Math.random() - 0.5) * 1.8;
+                this.color = `hsl(${Math.random() * 360}, 85%, 65%)`;
+                this.rot = Math.random() * 360;
+                this.rotSpeed = (Math.random() - 0.5) * 0.12;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rot += this.rotSpeed;
+                if (this.y > h + 60 || this.x < -60 || this.x > w + 60) {
+                    this.y = -30;
+                    this.x = Math.random() * w;
+                    this.speedY = Math.random() * 4 + 2.5;
+                }
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rot * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size/1.4);
+                ctx.restore();
+            }
+        }
+
+        function startConfettiRain(duration = 4800) {
+            if (confettiActive) return;
+            confettiActive = true;
+            confettiParticles = [];
+            for (let i=0; i<220; i++) confettiParticles.push(new ConfettiPiece());
+            function drawConfetti() {
+                if (!confettiActive) return;
+                confCtx.clearRect(0, 0, w, h);
+                for (let p of confettiParticles) {
+                    p.update();
+                    p.draw(confCtx);
+                }
+                confettiAnimId = requestAnimationFrame(drawConfetti);
+            }
+            drawConfetti();
+            setTimeout(() => {
+                if (confettiActive) {
+                    confettiActive = false;
+                    if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+                    confCtx.clearRect(0, 0, w, h);
+                }
+            }, duration);
+        }
+
+        // ---------- FIREWORKS (romantic burst) ----------
+        let fireCanvas = document.getElementById('fireworks-canvas');
+        let fwCtx = fireCanvas.getContext('2d');
+        let fwWidth, fwHeight;
+        let fireworksParticles = [];
+        let fwAnimFrame = null;
+        let fwActive = false;
+
+        function resizeFireworks() {
+            fwWidth = window.innerWidth;
+            fwHeight = window.innerHeight;
+            fireCanvas.width = fwWidth;
+            fireCanvas.height = fwHeight;
+        }
+        resizeFireworks();
+
+        class FireSpark {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 6.5;
+                this.vy = (Math.random() - 0.5) * 6.2 - 1.8;
+                this.gravity = 0.14;
+                this.life = 1.0;
+                this.decay = 0.016 + Math.random() * 0.012;
+                this.color = color || `hsl(${Math.random() * 360}, 95%, 68%)`;
+                this.size = 3 + Math.random() * 4.5;
+            }
+            update() {
+                this.vx *= 0.99;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+                return this.life > 0;
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.life * 0.9;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI*2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function spawnFirework(x, y) {
+            const palette = ['#ffb347', '#ff6b6b', '#ff85a1', '#ffe28a', '#ffb77c', '#ffd966', '#ffa07a'];
+            for (let i=0; i<60; i++) {
+                let col = palette[Math.floor(Math.random() * palette.length)];
+                fireworksParticles.push(new FireSpark(x, y, col));
+            }
+        }
+
+        function randomFireBurst() {
+            if (!fwActive) return;
+            let xPos = Math.random() * fwWidth;
+            let yPos = Math.random() * (fwHeight * 0.7) + 50;
+            spawnFirework(xPos, yPos);
+            if (Math.random() > 0.65) {
+                setTimeout(() => {
+                    if(fwActive) spawnFirework(Math.random() * fwWidth, Math.random() * (fwHeight * 0.6) + 70);
+                }, 100);
+            }
+        }
+
+        function animateFireworksLoop() {
+            if (!fwActive) return;
+            fwCtx.clearRect(0, 0, fwWidth, fwHeight);
+            let aliveExists = false;
+            for (let i=0; i<fireworksParticles.length; i++) {
+                let isAlive = fireworksParticles[i].update();
+                if (isAlive) {
+                    aliveExists = true;
+                    fireworksParticles[i].draw(fwCtx);
+                } else {
+                    fireworksParticles.splice(i,1);
+                    i--;
+                }
+            }
+            if (aliveExists || fwActive) {
+                fwAnimFrame = requestAnimationFrame(animateFireworksLoop);
+            } else {
+                if (fwAnimFrame) cancelAnimationFrame(fwAnimFrame);
+                fwCtx.clearRect(0, 0, fwWidth, fwHeight);
+            }
+        }
+
+        function startFireworksCelebration() {
+            if (fwActive) return;
+            fwActive = true;
+            fireworksParticles = [];
+            fwCtx.clearRect(0, 0, fwWidth, fwHeight);
+            // initial salvo
+            for (let i=0; i<6; i++) {
+                setTimeout(() => { if(fwActive) randomFireBurst(); }, i * 170);
+            }
+            let interval = setInterval(() => {
+                if (!fwActive) { clearInterval(interval); return; }
+                randomFireBurst();
+            }, 600);
+            animateFireworksLoop();
+            setTimeout(() => {
+                fwActive = false;
+                clearInterval(interval);
+                setTimeout(() => {
+                    if(fireworksParticles.length === 0 && fwAnimFrame) {
+                        cancelAnimationFrame(fwAnimFrame);
+                        fwCtx.clearRect(0,0,fwWidth,fwHeight);
+                    }
+                }, 1000);
+            }, 4200);
+        }
+
+        // floating hearts helper (extra love)
+        function showerFloatingHearts(count) {
+            for (let i=0; i<count; i++) {
+                let heartSpan = document.createElement('div');
+                heartSpan.innerHTML = ['💛','💖','💗','💘','💕','💓','💝','🥰'][Math.floor(Math.random()*8)];
+                heartSpan.style.position = 'fixed';
+                heartSpan.style.fontSize = (Math.random() * 32 + 20) + 'px';
+                heartSpan.style.left = Math.random() * window.innerWidth + 'px';
+                heartSpan.style.bottom = '10px';
+                heartSpan.style.pointerEvents = 'none';
+                heartSpan.style.zIndex = '2002';
+                heartSpan.style.opacity = '0.9';
+                heartSpan.style.filter = 'drop-shadow(0 0 4px gold)';
+                heartSpan.style.transition = 'all 1.7s ease-out';
+                document.body.appendChild(heartSpan);
+                let driftX = (Math.random() - 0.5) * 90;
+                let riseY = -80 - Math.random() * 220;
+                setTimeout(() => {
+                    heartSpan.style.transform = `translate(${driftX}px, ${riseY}px)`;
+                    heartSpan.style.opacity = '0';
+                }, 12);
+                setTimeout(() => heartSpan.remove(), 1900);
+            }
+        }
+
+        // main REVEAL action
+        revealBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!surpriseActivated) {
+                // reveal full letter
+                letterDiv.classList.add('show');
+                // change teaser message to something loving
+                teaser.innerHTML = "💛 You are my everything, Langga 💛";
+                // enhance card border glow
+                document.querySelector('.birthday-card').style.boxShadow = "0 30px 50px rgba(0, 0, 0, 0.4), 0 0 0 12px #ffebbb, 0 0 0 18px #ffaa55";
+                // start both effects
+                startConfettiRain(5800);
+                startFireworksCelebration();
+                // additional floating hearts
+                showerFloatingHearts(32);
+                // change button text
+                revealBtn.innerHTML = "💌 SURPRISE OPENED WITH LOVE 💌";
+                revealBtn.style.background = "#d95b2a";
+                revealBtn.style.boxShadow = "0 8px 0 #732c12";
+                surpriseActivated = true;
+                // tiny additional magic: extra heart burst after 0.2s
+                setTimeout(() => showerFloatingHearts(18), 400);
+            } else {
+                // if already opened, just extra confetti+hearts, never boring
+                startConfettiRain(2800);
+                showerFloatingHearts(24);
+                // also extra firework mini burst
+                if (!fwActive) {
+                    fwActive = true;
+                    for (let i=0;i<3;i++) setTimeout(() => randomFireBurst(), i*150);
+                    setTimeout(() => { fwActive = false; }, 2000);
+                    animateFireworksLoop();
+                } else {
+                    for (let i=0;i<3;i++) setTimeout(() => randomFireBurst(), i*100);
+                }
+            }
+        });
+
+        // resize on load
+        window.addEventListener('load', () => {
+            resizeConfetti();
+            resizeFireworks();
+            // friendly welcome hint (vanishes)
+            let hint = document.createElement('div');
+            hint.innerText = '💛 Click the button — a love letter awaits 💛';
+            hint.style.position = 'fixed';
+            hint.style.bottom = '70px';
+            hint.style.left = '50%';
+            hint.style.transform = 'translateX(-50%)';
+            hint.style.background = '#ffefcf';
+            hint.style.padding = '8px 24px';
+            hint.style.borderRadius = '60px';
+            hint.style.fontSize = '0.85rem';
+            hint.style.fontWeight = 'bold';
+            hint.style.color = '#aa4c2c';
+            hint.style.zIndex = '1003';
+            hint.style.boxShadow = '0 2px 12px rgba(0,0,0,0.2)';
+            document.body.appendChild(hint);
+            setTimeout(() => {
+                hint.style.opacity = '0';
+                setTimeout(() => hint.remove(), 700);
+            }, 4000);
+        });
+
+        // double-click anywhere adds extra tiny joy (optional)
+        document.body.addEventListener('dblclick', (e) => {
+            if (e.target === revealBtn) return;
+            startConfettiRain(1500);
+            showerFloatingHearts(12);
+        });
+    })();
+</script>
+</body>
+</html>
